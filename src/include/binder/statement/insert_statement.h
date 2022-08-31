@@ -14,7 +14,7 @@
 
 namespace bustub {
 
-class InsertStatement : public SQLStatement {
+class InsertStatement : public BoundStatement {
  public:
   explicit InsertStatement(duckdb_libpgquery::PGInsertStmt *pg_stmt);
 

@@ -25,7 +25,7 @@
 #include <fmt/core.h>
 #include <iostream>
 #include <unordered_set>
-#include "binder/sql_statement.h"
+#include "binder/bound_statement.h"
 #include "binder/statement/create_statement.h"
 #include "binder/statement/delete_statement.h"
 #include "binder/statement/insert_statement.h"

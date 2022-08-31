@@ -36,8 +36,8 @@
 
 #include <string>
 
+#include "binder/bound_statement.h"
 #include "binder/simplified_token.h"
-#include "binder/sql_statement.h"
 #include "binder/tokens.h"
 #include "catalog/catalog.h"
 #include "catalog/column.h"
@@ -63,7 +63,7 @@ class Binder {
   Binder() = default;
 
   /** The parsed SQL statements from an invocation to ParseQuery. */
-  vector<unique_ptr<SQLStatement>> statements_;
+  vector<unique_ptr<BoundStatement>> statements_;
 
   /** Attempts to parse a query into a series of SQL statements. The parsed statements
    * will be stored in the statements variable.
@@ -81,10 +81,10 @@ class Binder {
 
   /** Transforms a Postgres parse tree into a set of SQL Statements */
   auto TransformParseTree(const Catalog &catalog, duckdb_libpgquery::PGList *tree) const
-      -> std::vector<std::unique_ptr<SQLStatement>>;
+      -> std::vector<std::unique_ptr<BoundStatement>>;
 
   /** Transforms a Postgres statement into a single SQL statement */
-  auto TransformStatement(const Catalog &catalog, duckdb_libpgquery::PGNode *stmt) const -> unique_ptr<SQLStatement>;
+  auto TransformStatement(const Catalog &catalog, duckdb_libpgquery::PGNode *stmt) const -> unique_ptr<BoundStatement>;
 
   /** Get the string of a Postgres node type */
   static auto NodetypeToString(duckdb_libpgquery::PGNodeTag type) -> string;

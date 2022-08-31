@@ -36,7 +36,7 @@ auto TryBind(const string &query) {
   return std::move(binder.statements_);
 }
 
-void PrintStatements(const vector<unique_ptr<SQLStatement>> &statements) {
+void PrintStatements(const vector<unique_ptr<BoundStatement>> &statements) {
   for (const auto &statement : statements) {
     std::cout << statement->ToString() << std::endl;
   }

@@ -13,7 +13,7 @@
 
 namespace bustub {
 
-class DeleteStatement : public SQLStatement {
+class DeleteStatement : public BoundStatement {
  public:
   explicit DeleteStatement(duckdb_libpgquery::PGDeleteStmt *pg_stmt);
 

@@ -4,7 +4,7 @@ add_library(
   bustub_binder
   OBJECT
   keyword_helper.cpp
-  sql_statement.cpp
+  bound_statement.cpp
   nodetype_to_string.cpp
   binder.cpp
   transformer.cpp)

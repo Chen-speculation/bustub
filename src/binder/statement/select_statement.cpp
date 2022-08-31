@@ -13,7 +13,7 @@
 namespace bustub {
 
 SelectStatement::SelectStatement(const Catalog &catalog, duckdb_libpgquery::PGSelectStmt *pg_stmt)
-    : SQLStatement(StatementType::SELECT_STATEMENT),
+    : BoundStatement(StatementType::SELECT_STATEMENT),
       table_(make_unique<BoundTableRef>()),
       where_(make_unique<BoundExpression>()),
       having_(make_unique<BoundExpression>()),
@@ -200,6 +200,7 @@ auto SelectStatement::ResolveColumn(const string &col_name) -> unique_ptr<BoundE
   switch (table_->type_) {
     case TableReferenceType::BASE_TABLE: {
       auto base_table_ref = dynamic_cast<BoundBaseTableRef *>(table_.get());
+      // TODO: handle case-insensitive table / column names
       const auto &table_name = base_table_ref->table_;
       auto table_info = catalog_.GetTable(table_name);
       if (table_info == nullptr) {
@@ -209,7 +210,7 @@ auto SelectStatement::ResolveColumn(const string &col_name) -> unique_ptr<BoundE
       auto expr = make_unique<BoundExpression>();
       for (const auto &column : table_info->schema_.GetColumns()) {
         auto name = column.GetName();
-        if (name == col_name) {
+        if (StringUtil::Lower(name) == col_name) {
           if (!found) {
             expr = make_unique<BoundColumnRef>(table_name, name);
             found = true;
@@ -249,7 +250,7 @@ auto SelectStatement::ResolveColumnWithTable(const string &table_name, const str
   auto expr = make_unique<BoundExpression>();
   for (const auto &column : table_info->schema_.GetColumns()) {
     auto name = column.GetName();
-    if (name == col_name) {
+    if (StringUtil::Lower(name) == col_name) {
       if (!found) {
         expr = make_unique<BoundColumnRef>(table_name, name);
         found = true;
