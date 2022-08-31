@@ -134,8 +134,16 @@ unique_ptr<AbstractPlanNode> Planner::PlanTableRef(const BoundTableRef &table_re
       const auto &base_table_ref = dynamic_cast<const BoundBaseTableRef &>(table_ref);
       auto table = catalog_.GetTable(base_table_ref.table_);
       assert(table);
-      auto schema = SaveSchema(make_unique<Schema>(table->schema_));
-      return make_unique<SeqScanPlanNode>(schema, nullptr, table->oid_);
+      const auto &schema = table->schema_;
+      std::vector<std::pair<std::string, const AbstractExpression *>> output_schema;
+
+      size_t idx = 0;
+      for (const auto &column : schema.GetColumns()) {
+        output_schema.push_back(
+            {column.GetName(), SaveExpression(std::make_unique<ColumnValueExpression>(0, idx, column.GetType()))});
+        idx += 1;
+      }
+      return make_unique<SeqScanPlanNode>(SaveSchema(MakeOutputSchema(output_schema)), nullptr, table->oid_);
     }
     default:
       break;
